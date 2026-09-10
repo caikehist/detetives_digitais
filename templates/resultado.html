@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <title>{{ resultado.titulo }} - Detetives Digitais</title>
+    <!-- Tailwind CSS rodando 100% offline a partir de arquivo local -->
+    <script src="/static/tailwind.js"></script>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased">
+
+    <!-- Cabeçalho -->
+    <header class="bg-indigo-600 text-white shadow-lg">
+        <div class="max-w-6xl mx-auto px-6 py-8 text-center">
+            <span class="bg-indigo-500 text-indigo-100 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Ensino Fundamental - Anos Iniciais</span>
+            <h1 class="text-3xl md:text-4xl font-bold mt-3">Mostra de Ciências, Robótica e Tecnologias</h1>
+            <p class="text-indigo-200 mt-2 text-lg">Estande: <span class="font-semibold text-white">Detetives Digitais</span> 🕵️‍♂️💻</p>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-4xl mx-auto px-6 py-12">
+
+        <a href="/" class="inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors mb-8">← Voltar para o estande</a>
+
+        <!-- Cabeçalho do Resultado -->
+        <section class="bg-indigo-50 rounded-2xl p-8 border border-indigo-100 mb-10 text-center">
+            <span class="text-5xl">{{ resultado.emoji }}</span>
+            <h2 class="text-3xl font-bold text-slate-900 mt-4">{{ resultado.titulo }}</h2>
+            <p class="text-slate-600 leading-relaxed mt-4 max-w-2xl mx-auto">{{ resultado.resumo }}</p>
+        </section>
+
+        <!-- Jogo embedado (ex.: Scratch) -->
+        {% if resultado.embed_url %}
+            <div class="max-w-[485px] mx-auto mb-10 rounded-2xl overflow-hidden shadow-md bg-slate-900">
+                <iframe src="{{ resultado.embed_url }}" allowtransparency="true" allowfullscreen
+                        class="w-full aspect-[485/402] border-0" title="Jogo do Scratch"></iframe>
+            </div>
+        {% endif %}
+
+        <!-- Foto / Mídia do Resultado -->
+        {% if file_exists(resultado.imagem) %}
+            <section class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 mb-10">
+                <img src="/static/{{ resultado.imagem }}" alt="Foto do resultado: {{ resultado.titulo }}" class="w-full rounded-xl object-cover max-h-96">
+            </section>
+        {% else %}
+            <section class="bg-white rounded-2xl p-10 shadow-sm border border-dashed border-slate-300 mb-10 text-center">
+                <span class="block text-4xl mb-2">🖼️</span>
+                <p class="text-slate-500 font-medium mb-2">Aqui caberá a foto deste resultado.</p>
+                <p class="text-slate-400 text-sm">Adicione um arquivo em <code class="bg-slate-100 px-1.5 py-0.5 rounded">static/{{ resultado.imagem }}</code></p>
+            </section>
+        {% endif %}
+
+        <!-- Destaques e Atividades -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+
+            <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">⭐ Destaques</h3>
+                <ul class="space-y-3">
+                    {% for item in resultado.destaques %}
+                        <li class="flex gap-3 text-slate-600 text-sm leading-relaxed">
+                            <span class="text-indigo-500 font-bold">•</span>{{ item }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+                <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">✏️ Atividades</h3>
+                <ul class="space-y-3">
+                    {% for item in resultado.atividades %}
+                        <li class="flex gap-3 text-slate-600 text-sm leading-relaxed">
+                            <span class="text-indigo-500 font-bold">•</span>{{ item }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+        </div>
+
+        <!-- Navegação entre Resultados -->
+        {% if mostrar_navegacao %}
+        <nav class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-indigo-900 text-white rounded-2xl p-6">
+            <a href="/{{ anterior.slug }}" class="w-full sm:w-auto text-center sm:text-left hover:text-indigo-200 transition-colors group">
+                <span class="block text-xs uppercase tracking-wider text-indigo-300 mb-1 group-hover:gap-2">← Anterior</span>
+                <span class="font-semibold">{{ anterior.emoji }} {{ anterior.titulo }}</span>
+            </a>
+            <a href="/" class="text-xs uppercase tracking-wider text-indigo-300 hover:text-white transition-colors">Todos os resultados</a>
+            <a href="/{{ proximo.slug }}" class="w-full sm:w-auto text-center sm:text-right hover:text-indigo-200 transition-colors group">
+                <span class="block text-xs uppercase tracking-wider text-indigo-300 mb-1">Próximo →</span>
+                <span class="font-semibold">{{ proximo.emoji }} {{ proximo.titulo }}</span>
+            </a>
+        </nav>
+        {% endif %}
+
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm border-t border-slate-800">
+        <p>Mostra de Ciências & Robótica — FastAPI (Modo 100% Offline)</p>
+    </footer>
+
+</body>
+</html>
